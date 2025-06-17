@@ -1,16 +1,21 @@
 "use client";
 
-import { CarCard, CarCardsSkeletons, useCarsQuery } from "@/entities/car";
+import { CarCard, useCarsQuery } from "@/entities/car";
 import { BuyCarBtn } from "@/features/car/buy-car";
 import { AddCarToFavoritesBtn } from "@/features/car/add-car-to-favorites";
 import { CompareCarBtn } from "@/features/car/compare-car";
+import { useCarsPagination, usePageFromUrl } from "@/features/car/cars-pagination";
 
-import { CarsGrid } from "./cars-grid";
+import { PageLayout } from "./page-layout";
 
 export const CarCatalogPage = () => {
-  const { data, isLoading } = useCarsQuery({ page: 1, limit: 12 });
+  const { pageFromURL } = usePageFromUrl();
 
-  const renderCars = data?.data.map((car) => (
+  const { data, isLoading } = useCarsQuery({ page: pageFromURL, limit: 12 });
+
+  const { pagination } = useCarsPagination({ total: data?.meta.total ?? 0 });
+
+  const carCards = data?.data.map((car) => (
     <CarCard
       key={car.uniqueId}
       data={car}
@@ -20,13 +25,12 @@ export const CarCatalogPage = () => {
     />
   ));
 
-  if (isLoading) {
-    return (
-      <CarsGrid>
-        <CarCardsSkeletons />
-      </CarsGrid>
-    );
-  }
-
-  return <CarsGrid>{renderCars}</CarsGrid>;
+  return (
+    <PageLayout
+      loading={isLoading}
+      filters={<div>Filters</div>}
+      carCards={carCards}
+      pagination={pagination}
+    />
+  );
 };
