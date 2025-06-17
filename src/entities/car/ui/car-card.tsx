@@ -1,8 +1,6 @@
-"use client";
-
-import { Card, Flex, Space, Typography } from "antd";
+import { Card, Flex, Space, Typography, Skeleton } from "antd";
 import React, { FC, ReactNode, SVGProps } from "react";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 
 import CarIcon from "public/assets/icons/car-icon.svg";
 import MileageIcon from "public/assets/icons/mileage-icon.svg";
@@ -21,11 +19,13 @@ export const CarCard = ({
   buySlot,
   addToFavouriteSlot,
   compareSlot,
+  loading,
 }: {
   data: TCar;
   buySlot?: ReactNode;
   addToFavouriteSlot?: ReactNode;
   compareSlot?: ReactNode;
+  loading?: boolean;
 }) => {
   const {
     images,
@@ -41,25 +41,28 @@ export const CarCard = ({
     currency,
   } = data;
 
-  const image = images.image[0];
+  const image = images?.image[0];
   const title = `${markId} ${folderId}`;
   const formattedPrice = formatCurrency(price, { currency });
 
   return (
     <Card
+      loading={loading}
       variant="borderless"
+      style={{ display: "flex", flexDirection: "column" }}
+      styles={{ body: { flexGrow: 1, display: "flex", flexDirection: "column" } }}
       cover={
         <div
           style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}
         >
-          <Image alt="car image" src={image} fill objectFit={"cover"} />
+          <CarImage src={image} loading={loading} />
         </div>
       }
     >
       <Title style={{ fontSize: "1.15rem" }} level={1}>
         {title}
       </Title>
-      <Space direction={"vertical"} size={4}>
+      <Space direction={"vertical"} size={4} style={{ marginBlockEnd: "1rem" }}>
         <Text style={{ fontWeight: "bold", fontSize: "1rem" }}>{formattedPrice}</Text>
         <Item title={modificationId} Icon={CarIcon} />
         <Flex gap={"0.5rem"} wrap>
@@ -73,7 +76,7 @@ export const CarCard = ({
         </Flex>
       </Space>
 
-      <Flex gap={"1.5rem"} justify={"space-between"} style={{ marginBlockStart: "1rem" }}>
+      <Flex gap={"1.5rem"} justify={"space-between"} style={{ marginBlockStart: "auto" }}>
         <Flex gap={"0.5rem"}>
           {addToFavouriteSlot}
           {compareSlot}
@@ -81,6 +84,34 @@ export const CarCard = ({
         {buySlot}
       </Flex>
     </Card>
+  );
+};
+
+const CarImage = ({ src, loading }: { src: ImageProps["src"]; loading?: boolean }) => {
+  if (loading) {
+    return (
+      <Skeleton.Image
+        active
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      />
+    );
+  }
+
+  return (
+    <Image
+      alt="car image"
+      src={src}
+      fill
+      style={{ objectFit: "cover" }}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      loading={"lazy"}
+    />
   );
 };
 

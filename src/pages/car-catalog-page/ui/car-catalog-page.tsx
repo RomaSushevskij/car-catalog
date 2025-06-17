@@ -1,28 +1,32 @@
 "use client";
 
-import { useCarsQuery } from "@/entities/car/api/use-cars-api";
-import { CarCard } from "@/entities/car";
+import { CarCard, CarCardsSkeletons, useCarsQuery } from "@/entities/car";
 import { BuyCarBtn } from "@/features/car/buy-car";
 import { AddCarToFavoritesBtn } from "@/features/car/add-car-to-favorites";
 import { CompareCarBtn } from "@/features/car/compare-car";
 
+import { CarsGrid } from "./cars-grid";
+
 export const CarCatalogPage = () => {
-  const { data } = useCarsQuery();
-  console.log(data);
+  const { data, isLoading } = useCarsQuery({ page: 1, limit: 12 });
 
-  const car = data?.data[0];
+  const renderCars = data?.data.map((car) => (
+    <CarCard
+      key={car.uniqueId}
+      data={car}
+      buySlot={<BuyCarBtn />}
+      addToFavouriteSlot={<AddCarToFavoritesBtn />}
+      compareSlot={<CompareCarBtn />}
+    />
+  ));
 
-  if (!car) {
-    return null;
+  if (isLoading) {
+    return (
+      <CarsGrid>
+        <CarCardsSkeletons />
+      </CarsGrid>
+    );
   }
-  return (
-    <div>
-      <CarCard
-        data={car}
-        buySlot={<BuyCarBtn />}
-        addToFavouriteSlot={<AddCarToFavoritesBtn />}
-        compareSlot={<CompareCarBtn />}
-      />
-    </div>
-  );
+
+  return <CarsGrid>{renderCars}</CarsGrid>;
 };

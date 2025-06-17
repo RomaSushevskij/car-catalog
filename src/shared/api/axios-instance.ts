@@ -12,4 +12,5 @@ export const axiosInstance = applyCaseMiddleware(
     },
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "comma" }),
   }),
+  { ignoreParams: true },
 );
