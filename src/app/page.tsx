@@ -1,5 +1,10 @@
-import { CarCatalogPage } from "@/pages/car-catalog-page";
+import { CarCatalogPage } from "@/page-components/car-catalog-page";
+import { Suspense } from "react";
 
 export default function Home() {
-  return <CarCatalogPage />;
+  return (
+    <Suspense fallback={null}>
+      <CarCatalogPage />
+    </Suspense>
+  );
 }

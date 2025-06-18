@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { webpack } from "next/dist/compiled/webpack/webpack";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["antd", "@ant-design", "rc-util", "rc-picker"],
   async rewrites() {
     return [
       {
@@ -41,13 +42,11 @@ const nextConfig: NextConfig = {
 
     return config;
   },
-  experimental: {
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
     },
   },
