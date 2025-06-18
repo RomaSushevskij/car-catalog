@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Pagination, PaginationProps } from "antd";
 
+import { CARS_API_QUERY_KEYS } from "@/entities/car";
+
 import { usePageFromUrl } from "./use-page-from-url";
 
 export const useCarsPagination = ({ total }: { total: number }) => {
@@ -14,23 +16,23 @@ export const useCarsPagination = ({ total }: { total: number }) => {
   const onPageChange: PaginationProps["onChange"] = (page) => {
     if (!searchParams) return;
 
-    const currentPage = searchParams?.get("page");
+    const currentPage = searchParams?.get(CARS_API_QUERY_KEYS.page);
 
     if (String(page) === currentPage) return;
 
     const params = new URLSearchParams(searchParams);
-    params.set("page", String(page));
+    params.set(CARS_API_QUERY_KEYS.page, String(page));
     replace(`${pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
     if (!searchParams) return;
 
-    const hasPage = searchParams.has("page");
+    const hasPage = searchParams.has(CARS_API_QUERY_KEYS.page);
 
     if (!hasPage) {
       const params = new URLSearchParams(searchParams);
-      params.set("page", "1");
+      params.set(CARS_API_QUERY_KEYS.page, "1");
       replace(`${pathname}?${params.toString()}`);
     }
   }, [searchParams, pathname, replace]);

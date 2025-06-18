@@ -3,7 +3,9 @@ export const formatQueryParamsKeys = (
 ): Record<string, string | number> => {
   return Object.keys(queryParams).reduce(
     (result, key) => {
-      result[`_${key}`] = queryParams[key];
+      if (queryParams[key] !== "") {
+        result[`_${key}`] = queryParams[key];
+      }
 
       return result;
     },

@@ -1,17 +1,23 @@
 "use client";
 
-import { CarCard, useCarsQuery } from "@/entities/car";
+import { CarCard, CARS_API_QUERY_KEYS, useCarsQuery } from "@/entities/car";
 import { BuyCarBtn } from "@/features/car/buy-car";
 import { AddCarToFavoritesBtn } from "@/features/car/add-car-to-favorites";
 import { CompareCarBtn } from "@/features/car/compare-car";
 import { useCarsPagination, usePageFromUrl } from "@/features/car/cars-pagination";
 
 import { PageLayout } from "./page-layout";
+import { CarsFilters, useSortParamsFromUrl } from "@/features/car/cars-filters";
 
 export const CarCatalogPage = () => {
   const { pageFromURL } = usePageFromUrl();
+  const { sortingParamsFromURL } = useSortParamsFromUrl();
 
-  const { data, isLoading } = useCarsQuery({ page: pageFromURL, limit: 12 });
+  const { data, isLoading, isFetching } = useCarsQuery({
+    [CARS_API_QUERY_KEYS.page]: pageFromURL,
+    limit: 12,
+    ...sortingParamsFromURL,
+  });
 
   const { pagination } = useCarsPagination({ total: data?.meta.total ?? 0 });
 
@@ -27,8 +33,8 @@ export const CarCatalogPage = () => {
 
   return (
     <PageLayout
-      loading={isLoading}
-      filters={<div>Filters</div>}
+      loading={isLoading || isFetching}
+      filters={<CarsFilters />}
       carCards={carCards}
       pagination={pagination}
     />
