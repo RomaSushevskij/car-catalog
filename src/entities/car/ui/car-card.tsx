@@ -1,5 +1,5 @@
 import { Card, Flex, Space, Typography, Skeleton } from "antd";
-import React, { FC, ReactNode, SVGProps } from "react";
+import React, { FC, ReactNode, SVGProps, useState } from "react";
 import Image, { ImageProps } from "next/image";
 
 import CarIcon from "public/assets/icons/car-icon.svg";
@@ -88,30 +88,38 @@ export const CarCard = ({
 };
 
 const CarImage = ({ src, loading }: { src: ImageProps["src"]; loading?: boolean }) => {
-  if (loading) {
-    return (
-      <Skeleton.Image
-        active
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: 0,
-          left: 0,
-        }}
-      />
-    );
-  }
+  const [isLoaded, setIsLoaded] = useState(false);
+  const showSkeleton = loading || !isLoaded;
 
   return (
-    <Image
-      alt="car image"
-      src={src}
-      fill
-      style={{ objectFit: "cover" }}
-      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      loading={"lazy"}
-    />
+    <>
+      {showSkeleton && (
+        <Skeleton.Image
+          active
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+        />
+      )}
+
+      {!loading && (
+        <Image
+          alt="car image"
+          src={src}
+          fill
+          style={{ objectFit: "cover", opacity: !loading && isLoaded ? 1 : 0 }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority
+          onLoad={() => {
+            setIsLoaded(true);
+          }}
+        />
+      )}
+    </>
   );
 };
 
