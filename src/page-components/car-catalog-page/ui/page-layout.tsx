@@ -17,7 +17,10 @@ export const PageLayout = ({
   pagination: ReactNode;
 }) => {
   return (
-    <Flex style={{ flexDirection: "column" }} gap={"1rem"}>
+    <Flex
+      style={{ flexDirection: "column", maxWidth: "120rem", marginInline: "auto" }}
+      gap={"1rem"}
+    >
       {filters}
       <CarsGrid>{loading ? <CarCardsSkeletons /> : carCards}</CarsGrid>
       <Flex justify={"center"}>{pagination}</Flex>
