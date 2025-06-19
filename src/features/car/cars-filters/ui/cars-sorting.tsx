@@ -28,7 +28,7 @@ const options: DefaultOptionType[] = [
 export const CarsSorting = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const { sortingParamsFromURL } = useSortParamsFromUrl();
 
@@ -69,7 +69,7 @@ export const CarsSorting = () => {
         break;
     }
 
-    replace(`${pathname}?${params.toString()}`);
+    push(`${pathname}?${params.toString()}`);
   };
 
   return (

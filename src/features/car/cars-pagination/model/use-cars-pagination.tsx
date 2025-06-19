@@ -9,7 +9,7 @@ import { usePageFromUrl } from "./use-page-from-url";
 export const useCarsPagination = ({ total }: { total: number }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
 
   const { pageFromURL } = usePageFromUrl();
 
@@ -22,7 +22,7 @@ export const useCarsPagination = ({ total }: { total: number }) => {
 
     const params = new URLSearchParams(searchParams);
     params.set(CARS_API_QUERY_KEYS.page, String(page));
-    replace(`${pathname}?${params.toString()}`);
+    push(`${pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
